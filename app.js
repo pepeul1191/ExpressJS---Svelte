@@ -15,7 +15,7 @@ app.get('/', (req, res) => {
   res.render('home', locals);
 });
 
-app.get('/pokemons/list', (req, res) => {
+app.get('/pokemon/list', (req, res) => {
   let db = new sqlite3.Database('./pokemons.db');
   let sql = 'SELECT * FROM pokemons LIMIT 20';
   db.all(sql, [], (err, rows) => {
