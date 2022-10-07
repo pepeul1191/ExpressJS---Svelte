@@ -11,3 +11,4 @@ tmp
 output.xml
 static/uploads
 package-lock.json
+public/build
