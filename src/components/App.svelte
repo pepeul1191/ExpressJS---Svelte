@@ -22,28 +22,39 @@
   });
 </script>
 
-<h4>Lista de Pokemones</h4>
-<table>
-  <thead>
-    <th>Número</th>
-    <th>Nombre</th>
-    <th>Tipo 1</th>
-    <th>Tipo 2</th>
-    <th>Peso</th>
-    <th>Talla</th>
-    <th>Imagen</th>
-  </thead>
-  {#each pokemons as pokemon}
-    <tr>
-      <td>{pokemon.number}</td>
-      <td>{pokemon.name}</td>
-      <td>{pokemon.type_1}</td>
-      <td>{pokemon.type_2}</td>
-      <td>{pokemon.weight}</td>
-      <td>{pokemon.height}</td>
-      <td>
-        <img src="{pokemon.img}" height=20 width=20 alt="{pokemon.number} - {pokemon.name}">
-      </td>
-    </tr>
-  {/each}
-</table>
+<div class="row"> 
+  <div class="col-md-12">
+    <h4>Lista de Pokemones</h4>
+    <table>
+      <thead>
+        <th>Número</th>
+        <th>Nombre</th>
+        <th>Tipo 1</th>
+        <th>Tipo 2</th>
+        <th>Peso</th>
+        <th>Talla</th>
+        <th>Imagen</th>
+      </thead>
+      {#each pokemons as pokemon}
+        <tr>
+          <td>{pokemon.number}</td>
+          <td>{pokemon.name}</td>
+          <td>{pokemon.type_1}</td>
+          <td>{pokemon.type_2}</td>
+          <td>{pokemon.weight}</td>
+          <td>{pokemon.height}</td>
+          <td>
+            <img src="{pokemon.img.replace('/images/', '/assets/images/')}" height=50 width=50 alt="{pokemon.number} - {pokemon.name}">
+          </td>
+        </tr>
+      {/each}
+    </table>
+  </div>
+</div>
+
+<style>
+  .row{
+    margin-left: 20px;
+    margin-top: 20px;
+  }
+</style>
