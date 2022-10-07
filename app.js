@@ -1,10 +1,18 @@
 const express = require('express');
+const path = require('path');
+var logger = require('morgan');
+
 const sqlite3 = require('sqlite3').verbose();
 var app = express();
+app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', 'ejs');
+app.use(logger('dev'));
+app.use(express.static(path.join(__dirname, 'public')));
 
 // respond with "hello world" when a GET request is made to the homepage
 app.get('/', (req, res) => {
-  res.send('hello world');
+  var locals = {};
+  res.render('home', locals);
 });
 
 app.get('/pokemons/list', (req, res) => {
