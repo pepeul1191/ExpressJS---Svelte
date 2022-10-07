@@ -1,0 +1,13 @@
+
+node_modules
+*.pyc
+.DS_Store
+__pycache__
+env
+.vscode
+data/*
+.env
+tmp
+output.xml
+static/uploads
+package-lock.json
