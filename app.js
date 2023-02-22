@@ -27,9 +27,24 @@ app.get('/pokemon/list', (req, res) => {
   });
 });
 
-app.get('/pokemon/:id', (req, res) => {
+app.get('/pokemon', (req, res) => {
+  let id = req.query.id;
   const db = new sqlite3.Database('./pokemons.db');
-  let sql = `SELECT * FROM pokemons WHERE number=${req.params.id}`;
+  let sql = `SELECT * FROM pokemons WHERE id=${id}`;
+  db.get(sql, [], (err, row) => {
+    if (err) {
+      console.error(err);
+      res.status(500).send('ups, ocurrió un error');
+    }
+    db.close();
+    res.send(row)
+  });
+});
+
+app.get('/pokemon/:number', (req, res) => {
+  let pokemonNumber = req.params.number;
+  const db = new sqlite3.Database('./pokemons.db');
+  let sql = `SELECT * FROM pokemons WHERE number=${pokemonNumber}`;
   db.get(sql, [], (err, row) => {
     if (err) {
       console.error(err);
