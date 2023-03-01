@@ -2,10 +2,14 @@ const express = require('express');
 const path = require('path');
 var bodyParser = require('body-parser');
 var logger = require('morgan');
+var cors = require('cors')
 const Sequelize = require('sequelize');
 
 const sqlite3 = require('sqlite3').verbose();
 var app = express();
+app.use(cors({
+  origin: '*',
+}))
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 app.use(logger('dev'));
