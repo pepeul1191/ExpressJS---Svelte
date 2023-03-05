@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
+    "start:dev": "node ./node_modules/nodemon/bin/nodemon.js node app.js --ignore './public/' --ignore './resources/'",
     "start": "rollup -c -w & node app.js"
   },
   "keywords": [],
@@ -23,6 +24,7 @@
   },
   "devDependencies": {
     "@rollup/plugin-node-resolve": "^14.1.0",
+    "nodemon": "^2.0.20",
     "rollup": "^2.79.1",
     "rollup-plugin-css-only": "^3.1.0",
     "rollup-plugin-svelte": "^7.1.0"
