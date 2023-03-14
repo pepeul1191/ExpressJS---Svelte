@@ -18,6 +18,7 @@ app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, 'public')));
 // database
 const db = () => {return new sqlite3.Database('./pokemons.db');}
+const dbApp = () => {return new sqlite3.Database('./db/app.db');}
 // respond with "hello world" when a GET request is made to the homepage
 app.get('/', (req, res) => {
   var locals = {};
@@ -35,7 +36,7 @@ app.get('/pokemon/list', (req, res) => {
       throw err;
     }
     connection.close();
-    res.send(rows)
+    res.send(rows).status(500)
   });
 });
 
