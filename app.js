@@ -99,6 +99,39 @@ app.post('/pokemon/add', async (req, res, next) => {
   return res.send(resp).status(status);
 });
 
+app.post('/user/create', async (req, res, next) => {
+  // data
+  let status = 200
+  let resp = ''
+  var user = req.body.user;
+  var password = req.body.password;
+  var email = req.body.email;
+  var image_url = 'user_default.png';
+  // logic
+  var query1 = `SELECT COUNT(*) AS count FROM users WHERE user=? OR email=?`;
+  var query2 = `INSERT INTO users (user, password, email, image_url) VALUES (?, ?, ?, ?)`;
+  let connection = dbApp()
+  connection.get(query1, [user, email], (err, row) => {
+    if (err) {
+      console.error(err);
+      res.status(500).send('ups, ocurrió un error');
+    }
+    if (row['count'] == 0){
+      connection.run(query2, [user, password, email, image_url], function(err) {
+        if (err) {
+          console.log(err.message)
+          connection.close();
+          res.status(500).send('Usuario y/o correo ya existentes')
+        }
+        res.status(200).send(['Usuario creado', this.lastID])
+      });
+    }else{
+      connection.close();
+      res.status(500).send('Usuario y/o correo ya existentes')
+    }
+  });
+});
+
 app.listen(8000, () => {
   console.log('Listening to Port 8000');
 });

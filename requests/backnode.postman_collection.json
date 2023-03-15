@@ -1,0 +1,70 @@
+{
+	"info": {
+		"_postman_id": "b1388101-a448-4158-83fe-77226be9e7ec",
+		"name": "backnode",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "23055509"
+	},
+	"item": [
+		{
+			"name": "Lista de pokemones",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8000/pokemon/list",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"pokemon",
+						"list"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Crear Usuario",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "user",
+							"value": "root",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "777",
+							"type": "text"
+						},
+						{
+							"key": "email",
+							"value": "root@gmail.com",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:8000/user/create",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"user",
+						"create"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
