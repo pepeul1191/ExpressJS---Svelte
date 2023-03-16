@@ -101,8 +101,6 @@ app.post('/pokemon/add', async (req, res, next) => {
 
 app.post('/user/create', async (req, res, next) => {
   // data
-  let status = 200
-  let resp = ''
   var user = req.body.user;
   var password = req.body.password;
   var email = req.body.email;
@@ -123,11 +121,34 @@ app.post('/user/create', async (req, res, next) => {
           connection.close();
           res.status(500).send('Usuario y/o correo ya existentes')
         }
-        res.status(200).send(['Usuario creado', this.lastID])
+        res.status(200).send({message: this.lastID})
       });
     }else{
       connection.close();
       res.status(500).send('Usuario y/o correo ya existentes')
+    }
+  });
+});
+
+app.post('/user/validate', async (req, res, next) => {
+  // data
+  var user = req.body.user;
+  var password = req.body.password;
+  // logic
+  let connection = dbApp()
+  let sql = `SELECT COUNT(*) AS count, name, email, image_url FROM users WHERE user=? AND password=?`;
+  connection.get(sql, [user, password], (err, row) => {
+    if (err) {
+      console.error(err);
+      res.status(500).send('ups, ocurrió un error');
+    }
+    connection.close();
+    if (row['count'] == 1){
+      var response = {name: row['name'], email: row['email'], image_url: row['image_url']}
+      console.log(response)
+      res.status(200).send(response)
+    }else{
+      res.status(500).send('Usuario y/o contraseña incorrectos')
     }
   });
 });
