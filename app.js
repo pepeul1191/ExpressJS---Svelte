@@ -136,7 +136,7 @@ app.post('/user/validate', async (req, res, next) => {
   var password = req.body.password;
   // logic
   let connection = dbApp()
-  let sql = `SELECT COUNT(*) AS count, name, email, image_url FROM users WHERE user=? AND password=?`;
+  let sql = `SELECT id, COUNT(*) AS count, user, name, email, image_url FROM users WHERE user=? AND password=?`;
   connection.get(sql, [user, password], (err, row) => {
     if (err) {
       console.error(err);
@@ -144,7 +144,13 @@ app.post('/user/validate', async (req, res, next) => {
     }
     connection.close();
     if (row['count'] == 1){
-      var response = {name: row['name'], email: row['email'], image_url: row['image_url']}
+      var response = {
+        id:row['id'],
+        user: row['user'], 
+        name: row['name'], 
+        email: row['email'], 
+        image_url: row['image_url']
+      }
       console.log(response)
       res.status(200).send(response)
     }else{
