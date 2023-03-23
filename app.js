@@ -1,5 +1,6 @@
 const express = require('express');
 const path = require('path');
+const fileUpload = require('express-fileupload');
 var bodyParser = require('body-parser');
 var logger = require('morgan');
 var cors = require('cors')
@@ -10,6 +11,7 @@ var app = express();
 app.use(cors({
   origin: '*',
 }))
+app.use(fileUpload({createParentPath: true}));
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 app.use(logger('dev'));
@@ -157,6 +159,16 @@ app.post('/user/validate', async (req, res, next) => {
       res.status(500).send('Usuario y/o contraseña incorrectos')
     }
   });
+});
+
+app.post('/user/update', async (req, res, next) => {
+  // data
+  var id = req.body.id;
+  var name = req.body.name;
+  var files = req.files;
+  console.log(files)
+  // logic
+  res.status(200).send('response')
 });
 
 app.listen(8000, () => {
