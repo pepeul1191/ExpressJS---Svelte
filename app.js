@@ -29,16 +29,19 @@ app.get('/', (req, res) => {
 
 app.get('/pokemon/list', (req, res) => {
   // data
+  let pokemonName = (typeof req.query.name === 'undefined') ? "" : req.query.name ;
   // logic
-  let connection = db()
-  let sql = 'SELECT * FROM pokemons LIMIT 20';
+  let connection = dbApp()
+  let sql = `SELECT P.id, P.name, P.number, P.weight, P.height, P.image_url, P.generation_id, G.name AS generation_name 
+    FROM pokemons P INNER JOIN generations G ON P.generation_id = G.id`;
+  sql = (pokemonName != "") ? (sql += ` WHERE P.name LIKE "%${pokemonName}%"`) : sql
   connection.all(sql, [], (err, rows) => {
     if (err) {
       console.error(err);
       throw err;
     }
     connection.close();
-    res.send(rows).status(500)
+    res.send(rows).status(200)
   });
 });
 
