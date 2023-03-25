@@ -30,11 +30,27 @@ app.get('/', (req, res) => {
 app.get('/pokemon/list', (req, res) => {
   // data
   let pokemonName = (typeof req.query.name === 'undefined') ? "" : req.query.name ;
+  let generationIds = (typeof req.query.generation_ids === 'undefined') ? "" : req.query.generation_ids;
+  generationIds = generationIds.split( '||')
+  generationIdQuqery = '('
+  generationIds.forEach((id) => {
+    generationIdQuqery += (id + ",")
+  })
+  generationIdQuqery += ")"
+  if(generationIdQuqery.length > 1){
+
+    generationIdQuqery = 
+      generationIdQuqery.substring(0, generationIdQuqery.length - 2) + 
+      generationIdQuqery.substring(generationIdQuqery.length - 1);
+  }
   // logic
   let connection = dbApp()
   let sql = `SELECT P.id, P.name, P.number, P.weight, P.height, P.image_url, P.generation_id, G.name AS generation_name 
     FROM pokemons P INNER JOIN generations G ON P.generation_id = G.id`;
-  sql = (pokemonName != "") ? (sql += ` WHERE P.name LIKE "%${pokemonName}%"`) : sql
+  sql = (pokemonName != "" || generationIdQuqery != "()") ? (sql += ' WHERE ') : sql  
+  sql = (pokemonName != "") ? (sql += ` P.name LIKE "%${pokemonName}%"`) : sql
+  sql = (pokemonName != "" && generationIdQuqery != "()") ? (sql += ' AND ') : sql
+  sql = (generationIdQuqery != "()") ? (sql += ` P.generation_id IN ${generationIdQuqery}`) : sql
   connection.all(sql, [], (err, rows) => {
     if (err) {
       console.error(err);
