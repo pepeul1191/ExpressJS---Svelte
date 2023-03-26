@@ -4,14 +4,14 @@ const fileUpload = require('express-fileupload');
 var bodyParser = require('body-parser');
 var logger = require('morgan');
 var cors = require('cors')
-const Sequelize = require('sequelize');
+const fs = require('fs');
 
 const sqlite3 = require('sqlite3').verbose();
 var app = express();
 app.use(cors({
   origin: '*',
 }))
-app.use(fileUpload({createParentPath: true}));
+app.use(fileUpload({createParentPath: true, tempFileDir: '/tmp/'}));
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 app.use(logger('dev'));
@@ -38,7 +38,6 @@ app.get('/pokemon/list', (req, res) => {
   })
   generationIdQuqery += ")"
   if(generationIdQuqery.length > 1){
-
     generationIdQuqery = 
       generationIdQuqery.substring(0, generationIdQuqery.length - 2) + 
       generationIdQuqery.substring(generationIdQuqery.length - 1);
@@ -180,12 +179,27 @@ app.post('/user/validate', async (req, res, next) => {
   });
 });
 
+app.post('/upload/demo', async (req, res, next) => {
+  // data
+  var extraData = req.body.extra_data;
+  var file = req.files['file'];
+  const uploadDir = 'public/uploads/';
+  const absUploadDir = path.join(__dirname, uploadDir, file['name']);
+  // logic
+  file.mv(absUploadDir, (err) => {
+    if (err) {
+      console.log(err)
+      return res.status(500).send("Error con el archivo enviado");
+    }
+    res.status(200).send('response')
+  });
+});
+
 app.post('/user/update', async (req, res, next) => {
   // data
   var id = req.body.id;
   var name = req.body.name;
   var files = req.files;
-  console.log(files)
   // logic
   res.status(200).send('response')
 });
