@@ -136,12 +136,13 @@ app.post('/user/create', async (req, res, next) => {
     }
     if (row['count'] == 0){
       connection.run(query2, [user, password, email, image_url], function(err) {
+        // console.error(err)
         if (err) {
-          console.log(err.message)
+          // console.error(err.message)
           connection.close();
-          res.status(500).send('Usuario y/o correo ya existentes')
+          res.status(500).send('Error al crear al nuevo usuario')
         }
-        res.status(200).send({message: this.lastID})
+        res.status(200).send(this.lastID.toString())
       });
     }else{
       connection.close();
