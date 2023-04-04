@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Listado de Poekmones</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+</head>
+<body>
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container">
+      <a class="navbar-brand" href="#">Navbar</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+        <div class="navbar-nav">
+          <a class="nav-link active" aria-current="page" href="#">Home</a>
+          <a class="nav-link" href="#">Features</a>
+          <a class="nav-link" href="#">Pricing</a>
+          <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
+        </div>
+      </div>
+    </div>
+  </nav>
+  <div class="container">
+    <div class="input-group mb-3 mt-3">
+      <input type="text" class="form-control" placeholder="Ingrese un nombre para filtrar" id="txtName">
+      <button class="btn btn-primary" type="button" id="btnSearch">Buscar</button>
+    </div>
+    <div class="row">
+      <table class="table table-striped" id="tablita">
+        <thead>
+          <tr>
+            <th>Código</th>
+            <th>Nombre</th>
+            <th>Talla</th>
+            <th>Peso</th>
+            <th>Imagen</th>
+          </tr>
+        </thead>
+        <tbody id="tableBody">
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <!-- javascript -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+  <script>
+    const BASE_URL = 'http://localhost:8000/';
+
+    const newTr = (number, name, weight, height, image_url) => {
+      var tr = document.createElement('tr')
+      var tdNumber = document.createElement('td')
+      tdNumber.innerHTML = number;
+      var tdName = document.createElement('td')
+      tdName.innerHTML = name;
+      var tdWeight = document.createElement('td')
+      tdWeight.innerHTML = weight;
+      var tdHeight = document.createElement('td')
+      tdHeight.innerHTML = height;
+      var image = document.createElement('img')
+      image.setAttribute('src', image_url);
+      image.setAttribute('height', '50');
+      image.setAttribute('width', '50');
+      var tdImage = document.createElement('td')
+      tdImage.append(image);
+      tr.append(tdNumber);
+      tr.append(tdName);
+      tr.append(tdWeight);
+      tr.append(tdHeight);
+      tr.append(tdImage);
+      return tr;
+    }
+
+    const listar = (name) => {
+      var xhr = new XMLHttpRequest();
+      xhr.open('GET', BASE_URL + 'pokemon/list?name=' + name, true);
+      xhr.onload = function() {
+        if (xhr.status === 200) {
+          var pokemones = JSON.parse(xhr.responseText);
+          var tbody = document.getElementById("tablita").children[1]
+          pokemones.forEach(pokemon => {
+            var tr = newTr(pokemon['number'], pokemon['name'], pokemon['weight'], pokemon['height'], pokemon['image_url'])
+            tbody.append(tr)
+          });
+        } else {
+          console.log('Request failed.  Returned status of ' + xhr.status);
+          alert("No se pudo comunicar con el sevidor")
+        }
+      }
+      xhr.send();
+    };
+
+    window.onload = () => {
+      listar('');
+      var btnSearch = document.getElementById('btnSearch')
+      btnSearch.addEventListener('click', () => {
+        var txtName = document.getElementById('txtName')
+        var tableBody = document.getElementById('tableBody')
+        tableBody.innerHTML = "";
+			  listar(txtName.value)
+		  });
+    }
+  </script>
+</body>
+</html>
