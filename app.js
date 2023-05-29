@@ -80,7 +80,7 @@ app.get('/pokemon/:number', (req, res) => {
   // data
   let pokemonNumber = req.params.number;
   // logic
-  let connection = db()
+  let connection = dbApp()
   let sql = `SELECT * FROM pokemons WHERE number=?`;
   connection.get(sql, [pokemonNumber], (err, row) => {
     if (err) {
@@ -88,35 +88,46 @@ app.get('/pokemon/:number', (req, res) => {
       res.status(500).send('ups, ocurrió un error');
     }
     connection.close();
+    console.log(row)
     res.send(row)
   });
 });
 
-app.post('/pokemon/add', async (req, res, next) => {
+app.post('/pokemon/save', async (req, res, next) => {
   // data
   let status = 200
   let resp = ''
-  var number = req.body.number;
+  var id = req.body.id;
+  var number = req.body.id;
   var name = req.body.name;
-  var type_1 = req.body.type_1;
-  var type_2 = req.body.type_2;
   var weight = parseFloat(req.body.weight);
   var height = parseFloat(req.body.height);
-  var img = req.body.img;
+  var img = "XD"//req.body.image_url;
   // logic
-  var query = `INSERT INTO pokemons (number, name, type_1, type_2, weight, height, img) VALUES (${number}, '${name}', '${type_1}', '${type_2}', ${weight}, ${height}, '${img}')`;
-  let connection = db()
-  try{
-    const result = await connection.query(query, { returning : true });
-    resp = result[1].lastID;
-  }catch(error){
-    console.log(error);
-    resp = 'Error'
-  }finally{
-    connection.close()
+  var sql = '';
+  var params = [];
+  if(id == 0){
+    sql = `INSERT INTO pokemons (number, name, weight, height, image_url) VALUES (?,?,?,?,?)`;
+    params = [number, name, weight, height, img]
+  }else{
+    sql = `UPDATE pokemons SET number = ?,name = ?, weight = ?, height = ?, image_url=? WHERE id=?`;
+    params = [number, name, weight, height, img, id]
   }
-  // response
-  return res.send(resp).status(status);
+  let connection = dbApp()
+  connection.get(sql, params, (err, row) => {
+    if (err) {
+      console.error(err);
+      res.status(500).send('ups, ocurrió un error');
+    }else{
+      connection.close();
+      if (id != 0){
+        resp = "20000"
+      }else{
+        resp = id
+      }
+      res.status(200).send(resp)
+    }
+  });
 });
 
 app.post('/user/create', async (req, res, next) => {
@@ -172,13 +183,30 @@ app.post('/user/validate', async (req, res, next) => {
         email: row['email'], 
         image_url: row['image_url']
       }
-      console.log(response)
-      res.status(200).send(response)
+      //res.status(200).send(response)
+      res.status(200).send(row['id'].toString())
     }else{
       res.status(500).send('Usuario y/o contraseña incorrectos')
     }
   });
 });
+
+app.get('/user/fetch_one', (req, res) => {
+  // data
+  let userId = req.query.id;
+  // logic
+  let connection = dbApp()
+  let sql = `SELECT name, user, email, image_url FROM users WHERE id=?`;
+  connection.get(sql, [userId], (err, row) => {
+    if (err) {
+      console.error(err);
+      res.status(500).send('ups, ocurrió un error');
+    }
+    connection.close();
+    res.send(row)
+  });
+});
+
 
 app.post('/upload/demo', async (req, res, next) => {
   // data
