@@ -1,5 +1,4 @@
 CREATE TABLE IF NOT EXISTS "schema_migrations" (version varchar(255) primary key);
-CREATE TABLE sqlite_sequence(name,seq);
 CREATE TABLE users (
 	id	INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
   name	VARCHAR(45),
@@ -8,6 +7,7 @@ CREATE TABLE users (
 	email	VARCHAR(45) NOT NULL,
   image_url VARCHAR(100) NOT NULL
 );
+CREATE TABLE sqlite_sequence(name,seq);
 CREATE TABLE types (
 	id	INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
   name	VARCHAR(20)
@@ -30,7 +30,7 @@ CREATE TABLE users_pokemons (
 	id	INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
   user_id	INTEGER NOT NULL,
   pokemon_id	INTEGER NOT NULL,
-  FOREIGN KEY (user_id) REFERENCES user (id),
+  FOREIGN KEY (user_id) REFERENCES users (id),
   FOREIGN KEY (pokemon_id) REFERENCES pokemons (id)
 );
 CREATE TABLE users_followers (
@@ -50,7 +50,6 @@ INSERT INTO "schema_migrations" (version) VALUES
   ('20230323163022'),
   ('20230323163148'),
   ('20230323163442'),
-  ('20230323163542'),
   ('20230608011523'),
   ('20230608011531'),
   ('20230608011918'),

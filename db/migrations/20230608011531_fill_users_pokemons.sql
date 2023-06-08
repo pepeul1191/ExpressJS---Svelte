@@ -1,3 +1,4 @@
+-- migrate:up
 INSERT INTO users_pokemons (pokemon_id, user_id) VALUES
   (427,6),
   (414,4),
