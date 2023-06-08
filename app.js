@@ -102,7 +102,7 @@ app.post('/pokemon/save', async (req, res, next) => {
   var name = req.body.name;
   var weight = parseFloat(req.body.weight);
   var height = parseFloat(req.body.height);
-  var img = "XD"//req.body.image_url;
+  var img = req.body.image_url;
   // logic
   var sql = '';
   var params = [];
@@ -183,8 +183,8 @@ app.post('/user/validate', async (req, res, next) => {
         email: row['email'], 
         image_url: row['image_url']
       }
-      //res.status(200).send(response)
-      res.status(200).send(row['id'].toString())
+      res.status(200).send(response)
+      //res.status(200).send(row['id'].toString())
     }else{
       res.status(500).send('Usuario y/o contraseña incorrectos')
     }
@@ -198,6 +198,23 @@ app.get('/user/fetch_one', (req, res) => {
   let connection = dbApp()
   let sql = `SELECT name, user, email, image_url FROM users WHERE id=?`;
   connection.get(sql, [userId], (err, row) => {
+    if (err) {
+      console.error(err);
+      res.status(500).send('ups, ocurrió un error');
+    }
+    connection.close();
+    res.send(row)
+  });
+});
+
+app.get('/user/pokemon', (req, res) => {
+  // data
+  let userId = req.query.id;
+  // logic
+  let connection = dbApp()
+  let sql = `
+    SELECT P.id, P.name, P.number, P.weight, P.height, P.image_url FROM pokemons P INNER JOIN users_pokemons UP ON UP.pokemon_id = P.id  WHERE UP.user_id = ?;`;
+  connection.all(sql, [userId], (err, row) => {
     if (err) {
       console.error(err);
       res.status(500).send('ups, ocurrió un error');

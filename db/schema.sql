@@ -26,6 +26,20 @@ CREATE TABLE pokemons (
   generation_id	INTEGER NOT NULL,
   FOREIGN KEY (generation_id) REFERENCES generations (id)
 );
+CREATE TABLE users_pokemons (
+	id	INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+  user_id	INTEGER NOT NULL,
+  pokemon_id	INTEGER NOT NULL,
+  FOREIGN KEY (user_id) REFERENCES user (id),
+  FOREIGN KEY (pokemon_id) REFERENCES pokemons (id)
+);
+CREATE TABLE users_followers (
+	id	INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+  user_id	INTEGER NOT NULL,
+  follower_id	INTEGER NOT NULL,
+  FOREIGN KEY (user_id) REFERENCES users (id),
+  FOREIGN KEY (follower_id) REFERENCES users (id)
+);
 -- Dbmate schema migrations
 INSERT INTO "schema_migrations" (version) VALUES
   ('20230314232509'),
@@ -35,4 +49,9 @@ INSERT INTO "schema_migrations" (version) VALUES
   ('20230323163017'),
   ('20230323163022'),
   ('20230323163148'),
-  ('20230323163442');
+  ('20230323163442'),
+  ('20230323163542'),
+  ('20230608011523'),
+  ('20230608011531'),
+  ('20230608011918'),
+  ('20230608011925');
