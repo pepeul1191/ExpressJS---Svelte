@@ -50,6 +50,7 @@ app.get('/pokemon/list', (req, res) => {
   sql = (pokemonName != "") ? (sql += ` P.name LIKE "%${pokemonName}%"`) : sql
   sql = (pokemonName != "" && generationIdQuqery != "()") ? (sql += ' AND ') : sql
   sql = (generationIdQuqery != "()") ? (sql += ` P.generation_id IN ${generationIdQuqery}`) : sql
+  sql += ' LIMIT 20'
   connection.all(sql, [], (err, rows) => {
     if (err) {
       console.error(err);
